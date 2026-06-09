@@ -1,4 +1,3 @@
 # pairwise-beta-binomial-microbiome-paper
 
-pairwise-beta-binomial-microbiome-paper
-test
+This is github page accompanying the paper: https://academic.oup.com/nargab/article/5/1/lqad001/6993937
