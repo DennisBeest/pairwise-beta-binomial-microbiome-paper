@@ -1,0 +1,172 @@
+
+---
+title: "Supplemental material: Comparison beta-binomial models"
+author: "Dennis te Beest"
+date: "24-9-2021"
+output: pdf_document
+fig_caption: yes
+---
+ 
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r, echo = FALSE, include=FALSE}
+
+gitdir <- "C:/1Files/2Git/projects2/3microbiome/danone/1final/appendix"
+setwd(gitdir)
+load("supplemental example/supplCompareRelRatioSimOct21.RData")
+
+library(ggplot2)
+library(gridExtra)
+library(grid)
+
+#--summary MWW
+#--total identified
+sum(tabRel)
+#--incorrect identified
+sum(tabRel[!names(tabRel) %in% shifted])
+#--correct identified
+sum(tabRel[names(tabRel) %in% shifted])
+#--FDR
+sum(tabRel[!names(tabRel) %in% shifted])/ sum(tabRel)
+
+#--summary pairwise
+#--total identified
+sum(nSigRatio)
+#--correct identified
+sum(nSigRatioMod)
+#--correct identified
+sum(nSigRatioMod) / sum(nSigRatio)
+
+
+```
+
+
+# Introduction
+
+This is an example to demonstrate the pairwise beta-binomial (introduced in this paper) to the beta-binomial model of Martin et al. (2020); the latter we will refer to as the MWW method. Both methods are based on the beta-binomial model; the difference is that the MWW method analyses abundances relative to the total library size and the pairwise model analyses taxa relative to each other (i.e. ratios). It is well known that an analysis that focuses on abundances relative to the total library size is sensitive to what is often referred to as the "compositional bias". With "compositional bias" we refer to the effect that if some taxa increase in their abundance, all other taxa (by definition) decrease in their relative abundance, this is result of the unit-sum constraint (Aitchison, 2003). In the context of differential abundance analysis this means that if a treatment increase the abundance of one taxon, it decreases the relative abundance of all other taxa. This supplement provides an example of this bias and it demonstrates how it influences the analysis of relative abundances and that this bias does not affect an approach based on ratios. Note that the setup of the simulation is designed to display the weakness of analyzing relative abundances when the compositional bias is large. In practice, this bias may be smaller, but generally its size is unknown.
+
+
+# Simulation setup
+
+This supplemental example is based on the data example of the main document, i.e. we use the same 149 samples and the same 51 taxa. Based on these data we conduct a simulation study. Per simulation we randomly select 75 samples that are assigned to one treatment group. The remaining 74 samples are assigned to a second treatment group. For the first treatment group two taxa receive a differential shift by multiplying them by 8 (i.e. an 8-fold change). The remaining 49 taxa remain unchanged for both groups. For both methods we then follow (per simulation) the same approach as in the data example of the main document. For the MWW method we test each taxon separately and select taxa with an FDR (Benjamini-Hochberg) below 0.05. For the the pairwise beta-binomial method we test each ratio separately (i.e. 1275 ratios for 51 taxa) and select all ratios with an FDR (Benjamini-Hochberg) below 0.05. We then asses how often the two shifted taxa are involved in the selected ratios. \newpage 
+
+
+# Number of selected taxa and ratios
+
+The barplot below displays the frequencies at which taxa have been selected with the MWW method. The red bars indicate the two taxa that have been shifted. The shifted taxa are identified in most simulations, but it is also clear that a large number of taxa are incorrectly identified. In total across 50 simulations 331 taxa are identified, of these 238 are incorrect and 93 are correct, this equates a false discovery rate of 0.72.
+
+With the pairwise ratio beta-binomial model we identify 359 ratios across 50 simulations, of which 342 ratios contain either of the shifted taxa. This corresponds a false discovery rate 0.05, which corresponds to chosen level for the Benjamini-Hochberg correction (0.05).
+
+
+```{r figs, echo=FALSE}
+
+
+sortRel <- sort(tabRel, decreasing = TRUE)
+indexRed <- factor(names(sortRel) %in% shifted)
+df <- data.frame(x = 1:length(sortRel), y = as.numeric(sortRel), col = indexRed)
+p <- ggplot(data=df, aes(x = x, y = y, fill = col))
+p <- p + theme_classic()
+p <- p + geom_bar(stat="identity", width=0.85)
+p <- p + scale_fill_manual(values=c("black", "red"))
+p <- p + scale_x_continuous(expand = c(0, 0), limits = c(0, NA))
+p <- p + scale_y_continuous(expand = c(0, 0), limits = c(0, NA))
+p <- p + theme(axis.text.x=element_blank(), axis.ticks.x=element_blank())
+p <- p + xlab("taxa")
+p <- p + ylab("number of times selected")
+p <- p + theme(axis.title = element_text(size = 14))
+p <- p + theme(legend.position = "none")
+p <- p + ggtitle("taxa selected with MWW method")
+p <- p + theme(plot.title = element_text(hjust = 0.5, size = 18))
+p <- p + labs(caption = "Figure 1. Number times taxa are selected with MWW method across 50 simulations")
+p <- p + theme(plot.caption = element_text(hjust = 0, size = 11))
+p
+
+
+```
+\newpage
+
+
+# Examining the estimates
+
+The reason why the MWW method performs so poorly in this example is better understood when we examine the estimates of the effect sizes. Figure 2 below visualizes the estimates across all simulations. In this figure it is clear that the estimates of the MWW method are centered around -0.25. We also see a long tail on the right; this tail contains mostly estimates that belong to the two shifted taxa. The estimates in the left tail belong to taxa that have not received a differential shift, but nevertheless have absolute values that are equal to those in the right tail (as a result of the shift in their relative abundance). Some of these values can become so low that they are easily declared significant (i.e. we test against a null hypothesis of "no effect"). With the ratio method the estimates are largely centered around zero. The significant ratios cause a somewhat thicker tails on both sides of the distribution. This corresponds with what is expected given the simulation setup.
+
+
+# Discussion
+
+Although the result of this supplement may be a surprise to some, note that these results are well-known and well-described, particular in the field of compositional data analysis (Aitchison, 2003; Morton et al., 2019). The simulation is designed to display the weakness of analyzing relative abundances when the compositional bias is large. The fold change of 8 is selected because it illustrates the compositional bias clearly. Reducing the fold change, reduces the effect of compositional bias, and as a result less taxa without shift are pushed over the FDR significance threshold with the MWW method (and reducing the number of false discoveries). Although this differential shift is a relatively large, it can be reasonably expected in some microbiome studies. As demonstrated, ratio methods are insensitive to this bias, as is known from theory and this is actually by design (Aitchison, 2003; Morton et al., 2019).
+
+
+# References
+
+MARTIN, B. D., WITTEN, D. and WILLIS, A. D. (2020). Modeling microbial abundances and dysbiosis with
+beta-binomial regression. Ann. Appl. Stat. 14 94–115. \newline
+AITCHISON, J. (2003). The statistical analysis of compositional data. Blackburn Press, Caldwell, N.J. \newline
+MORTON, J. T., MAROTZ, C., WASHBURNE, A., SILVERMAN, J., ZARAMELA, L. S., EDLUND, A., ZENGLER, 
+K. and KNIGHT, R. (2019). Establishing microbial composition measurement standards with reference
+frames. Nature Communications 10 2719
+
+
+```{r figs2, echo=FALSE}
+
+
+################################################################################
+
+
+estRel <- c(estRelNull, estRelShift)
+distr <- factor(rep(c("Unchanged taxa", "Shifted taxa"), times = c(length(estRelNull), length(estRelShift))))
+dfPlot <- data.frame(distr = distr, estRel = estRel)
+
+p1 <- ggplot(data = dfPlot, aes(x = estRel, fill = distr))
+p1 <- p1 + geom_histogram(bins = 20)
+p1 <- p1 + theme_classic()
+p1 <- p1 + theme(legend.position = c(0.78, 0.8))
+p1 <- p1 + theme(legend.title = element_blank())
+p1 <- p1 + theme(axis.title = element_text(size = 14))
+p1 <- p1 + ggtitle("estimates MWW method")
+p1 <- p1 + theme(plot.title = element_text(size = 12, hjust = 0.5))
+p1 <- p1 + xlab("estimates")
+p1 <- p1 + theme(legend.text=element_text(size = 8))
+
+
+################################################################################################################
+
+
+estRatio <- c(estRatioNull, estRatioShift)
+distr <- factor(rep(c("Unchanged ratio", "Shifted ratio"), times = c(length(estRatioNull), length(estRatioShift))))
+dfPlot <- data.frame(distr = distr, est = estRatio)
+dfPlot2 <- dfPlot[!is.na(dfPlot$est), ]
+
+
+p2 <- ggplot(data = dfPlot2, aes(x = est, fill = distr))
+#p2 <- p2 + geom_histogram(bins = 20, position="dodge")
+p2 <- p2 + geom_histogram(bins = 20)
+p2 <- p2 + theme_classic()
+p2 <- p2 + theme(legend.position = c(0.78, 0.8))
+p2 <- p2 + theme(legend.title = element_blank())
+p2 <- p2 + theme(axis.title = element_text(size = 14))
+p2 <- p2 + ggtitle("estimates pairwise ratio method")
+p2 <- p2 + theme(plot.title = element_text(size = 12, hjust = 0.5))
+p2 <- p2 + xlab("estimates")
+p2 <- p2 + theme(legend.text=element_text(size = 8))
+
+
+################################################################################################################
+
+
+#dev.new(width = 12, height = 8)
+#{
+	grid.arrange(
+		p1,
+		p2,
+	  nrow=1, ncol=2,
+	  bottom = textGrob("Figure 2. Estimated effect sizes across 50 simulations", gp = gpar(fontsize = 11), hjust = 1.58, x = 1)
+	)
+#}
+
+
+```
+
+
