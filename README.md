@@ -6,7 +6,7 @@ The folder "supplement paper" contains the original supplement of the paper.
 
 This contains the subdirectories:  
 (1) data example: contains the code used for the data example described in the paper.  
-(2) simulation code and data: contains the code used in the simulation study, plus data used as inspiration.  
+(2) simulation code and data: contains the code used in the simulation study, plus data used for parametrisation.  
 (3) supplemental example: an additional simulated example to illustrate the advantage of ratio based analysis. Note the setup of this simulation is designed to display the weakness of analyzing relative abundances when the compositional bias is large.
 
 
