@@ -1,6 +1,6 @@
 # pairwise-beta-binomial-microbiome-paper
 
-This is github page accompanying the paper: https://academic.oup.com/nargab/article/5/1/lqad001/6993937
+This is a github page accompanying the paper: https://academic.oup.com/nargab/article/5/1/lqad001/6993937
 
 The folder supplement paper contains the original supplement of the paper. This contains subdirectories:  
 (1) data example: Contains te code used for the data example described in the paper.
