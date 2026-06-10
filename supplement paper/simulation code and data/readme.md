@@ -2,7 +2,9 @@
 # simulation code and data
 
 This folder contains the code and data used run the simulations described in the paper.
+It includes all steps, from model fitting, the simulations, to creation of the output.
 Next to the data, the data data folder also contains the fitted coefficients for the ratios.
+
 Note that during analysis the code had to be updated frequently, 
 due to alternations in underlying packages. 
 It has not been updated since publication and it is not maintained.
