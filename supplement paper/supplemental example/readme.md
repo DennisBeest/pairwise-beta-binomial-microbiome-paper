@@ -1,9 +1,8 @@
 
 # supplemental example
 
-This is an extra example to illustrate the difference between ratio based analysis versus a relative abundance based analysis.
+This is an extra example to illustrate the difference between ratio based analysis versus a relative abundance based analysis. The aim was to demonstrate that this can make a big difference.
 
-The aim was to demonstrate that this can make a big difference.
 The setup of this simulation is thus designed to display the weakness of analyzing relative abundances when the compositional bias is large and to illustrate the advantage of ratio based analysis. 
 
 The file sim relRatio.R does a simulation with the example data.
