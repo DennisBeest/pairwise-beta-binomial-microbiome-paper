@@ -1,6 +1,6 @@
 # pairwise-beta-binomial-microbiome
 
-This is a github page accompanying the paper: https://academic.oup.com/nargab/article/5/1/lqad001/6993937
+This is a github page accompanying the paper: "Pairwise ratio-based differential abundance analysis of infant microbiome 16S sequencing data". See: https://academic.oup.com/nargab/article/5/1/lqad001/6993937
 
 The folder "supplement paper" contains the supplement of the paper. Some readme files have been added or expanded.
 
