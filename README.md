@@ -2,7 +2,7 @@
 
 This is a github page accompanying the paper: https://academic.oup.com/nargab/article/5/1/lqad001/6993937
 
-The folder "supplement paper" contains the original supplement of the paper.  
+The folder "supplement paper" contains the supplement of the paper. Some readme files have been added or expanded.
 
 This contains the subdirectories:  
 (1) data example: contains the code used for the data example described in the paper.  
