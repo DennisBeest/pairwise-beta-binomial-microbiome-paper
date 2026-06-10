@@ -6,7 +6,7 @@ Next to the data, data data folder also contains the fitted coefficients for the
 
 Note that during analysis the code had to be updated frequently, 
 due to alternations in underlying packages. 
-It has not been updated since publication (and it is not maintained).
+It has not been updated since publication and it is not maintained.
 The code likely needs to be updated before it can run.
 Also note that the code takes a long time to run.
 
